@@ -1,5 +1,7 @@
-﻿using Microsoft.Data.SqlClient;
+﻿using Microsoft.CodeAnalysis.Elfie.Diagnostics;
+using Microsoft.Data.SqlClient;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using MvcNetCorePaginacionRegistros.Data;
 using MvcNetCorePaginacionRegistros.Models;
 
@@ -56,6 +58,16 @@ as
 	EMP_NO, APELLIDO, OFICIO, SALARIO, DEPT_NO FROM EMP
 	where OFICIO = @oficio) query
 	where POSICION >= @posicion AND POSICION < (@posicion + 2)
+go
+
+create procedure SP_EMPLEADOS_DEPARTAMENTO
+(@posicion int, @idDepartamento int) 
+as
+	 select EMP_NO, APELLIDO, OFICIO, SALARIO, DEPT_NO from(
+		select  cast (ROW_NUMBER() over (order by APELLIDO) as int )as POSICION
+		, EMP_NO, APELLIDO, OFICIO, SALARIO, DEPT_NO from EMP
+		where  DEPT_NO = @idDepartamento) query 
+		where POSICION = @posicion 
 go
 
 */
@@ -175,6 +187,36 @@ namespace MvcNetCorePaginacionRegistros.Repositories
                 NumeroRegistros = registros,
                 Empleados = empleados
             };
+        }
+
+        public async Task<Departamento> FindDepartamento(int idDepartamento)
+        {
+            var consulta = from datos in this.context.Departamentos
+                           where datos.IdDepartamento == idDepartamento
+                           select datos;
+            return await consulta.FirstOrDefaultAsync();
+        }
+
+        public async Task<Empleado> GetEmpleadoDepartamento(int posicion, int idDepartamento)
+        {
+            string sql = "SP_EMPLEADOS_DEPARTAMENTO @posicion, @idDepartamento";
+            SqlParameter pamPosicion =
+                new SqlParameter("@posicion", posicion);
+            SqlParameter pamIdDepartamento =
+                new SqlParameter("@iddepartamento", idDepartamento);
+            List<Empleado> consulta =
+                 await this.context.Empleados.FromSqlRaw(sql, pamPosicion, pamIdDepartamento).ToListAsync();
+            
+            return consulta[0];
+        }
+
+        public async Task<int> GetNumeroRegistros(int idDepartamento)
+        {
+            var consulta = from datos in this.context.Empleados
+                           where datos.IdDepartamento == idDepartamento
+                           select datos;
+
+            return await consulta.CountAsync();
         }
     }
 }

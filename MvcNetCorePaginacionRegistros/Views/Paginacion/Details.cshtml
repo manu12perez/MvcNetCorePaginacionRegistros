@@ -1,0 +1,109 @@
+﻿@model ModelDepartamentoEmpleado
+
+@{
+    ViewData["Title"] = "Details";
+    int numPagina = 1;
+    int numRegistros = (int)ViewData["REGISTROS"];
+}
+
+<ul class="list-group list-group-horizontal">
+    @for (int i = 1; i <= numRegistros; i ++)
+    {
+        <li class="list-group-item list-group-item-success">
+            <a asp-controller="Paginacion"
+               asp-action="Details"
+               asp-route-posicion="@i">
+                Página @numPagina
+            </a>
+        </li>
+        numPagina += 1;
+    }
+</ul>
+
+<h1>Details</h1>
+
+<h2 style="color:red">
+    Registro  de @ViewData["ULTIMO"]
+</h2>
+
+<div>
+    <ul class="list-group list-group-horizontal">
+        <li class="list-group-item">
+            <a asp-controller="Paginacion"
+               asp-action="Details"
+               asp-route-id="1">
+                Primero
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a asp-controller="Paginacion"
+               asp-action="Details"
+               asp-route-id="@ViewData["ANTERIOR"]">
+                Anterior
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a asp-controller="Paginacion"
+               asp-action="Details"
+               asp-route-id="@ViewData["SIGUIENTE"]">
+                Siguiente
+            </a>
+        </li>
+        <li class="list-group-item">
+            <a asp-controller="Paginacion"
+               asp-action="Details"
+               asp-route-id="@ViewData["ULTIMO"]">
+                Último
+            </a>
+        </li>
+    </ul>
+</div>
+
+<div>
+    <h4>Departamento</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Departamento.IdDepartamento)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Departamento.IdDepartamento)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Departamento.Nombre)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Departamento.Nombre)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Departamento.Localidad)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Departamento.Localidad)
+        </dd>
+    </dl>
+</div>
+<div>
+    <h4>Empleado</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Empleado.IdEmpleado)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Empleado.Apellido)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Empleado.Oficio)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Empleado.Salario)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Empleado.IdDepartamento)
+        </dt>
+    </dl>
+</div>
+<div>
+    <a asp-action="PaginarGrupoDepartamentos">Back to List</a>
+</div>

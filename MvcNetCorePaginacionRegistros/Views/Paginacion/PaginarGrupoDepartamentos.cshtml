@@ -29,6 +29,7 @@
             <th>ID</th>
             <th>NOMBRE</th>
             <th>LOCALIDAD</th>
+            <th></th>
         </tr>
     </thead>
     <tbody>
@@ -43,6 +44,14 @@
                 </td>
                 <td>
                     @item.Localidad
+                </td>
+                <td>
+                    <a asp-controller="Paginacion"
+                        asp-action="Details"
+                        asp-route-id="@item.IdDepartamento"
+                        class="btn btn-info">
+                        Details
+                    </a>
                 </td>
             </tr>
         }
