@@ -186,6 +186,7 @@ namespace MvcNetCorePaginacionRegistros.Controllers
             ViewData["ULTIMO"] = numRegistros;
             ViewData["SIGUIENTE"] = siguiente;
             ViewData["ANTERIOR"] = anterior;
+            ViewData["POSICION"] = posicion;
 
             return View(departamentoEmpleado);
         }
